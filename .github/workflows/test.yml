@@ -1,0 +1,45 @@
+name: Test
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install lint tools
+        run: python -m pip install --upgrade pip flake8
+
+      - name: Lint with flake8
+        run: |
+          flake8 gh_stars.py --max-line-length=100 --extend-ignore=E203
+
+      - name: Byte-compile check
+        run: python -m py_compile gh_stars.py
+
+      - name: Smoke test CLI (--help)
+        run: python gh_stars.py --help
+
+      - name: Smoke test CLI (no-arg / non-interactive guard)
+        # Feeding no stdin + no args should hit interactive_usernames(),
+        # read EOF, and exit cleanly with an error rather than hang.
+        run: |
+          if echo "" | python gh_stars.py; then
+            echo "expected non-zero exit for empty input" >&2
+            exit 1
+          fi

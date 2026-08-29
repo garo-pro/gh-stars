@@ -1,0 +1,16 @@
+version: 2
+updates:
+  # gh_stars.py has no third-party pip dependencies today, but keep this
+  # ready so any future requirements.txt gets patched automatically.
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  # Keep the CI workflow's actions (checkout, setup-python, ...) current.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5

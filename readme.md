@@ -1,0 +1,3 @@
+# gh stars
+
+A small Python tool designed to display the total star count for an user or organisation. It will first attempt to use the GH CLI if installed and authorized, but also can use Curl as fallback. Therefore, it also will include private repositories you are authorized to when possible. Either run it interactively or just list the names as args. It also supports -o <file> as parameter to pipe the result into a JSON file specified.
